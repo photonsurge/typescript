@@ -1,0 +1,9 @@
+<form [formGroup]="applyForm" (submit)="submit()">
+    <label for="name">Name</label>
+    <input id="name" type="text" class="new-todo-name" formControlName="name" />
+    <!-- <label for="message">Details</label>
+    <textarea id="message" class="" type="text" formControlName="message">
+
+    </textarea> -->
+    <button type="submit" class="add-todo">Add To Do</button>
+</form>

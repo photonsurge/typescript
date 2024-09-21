@@ -15,7 +15,7 @@ const routes: Routes = [
         title: 'Home details',
       },
       {
-        path: 'checklist/:id',
+        path: 'checklist',
         component: ChecklistComponent,
         title: 'Check List',
       },
