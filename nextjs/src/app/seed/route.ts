@@ -2,15 +2,17 @@
 import bcrypt from 'bcrypt';
 
 import { invoices, customers, users, revenue } from '../lib/placeholder-data';
-import {postClient} from '@/app/db';
+import { getSQLClient } from '@/app/db';
+import { Client } from 'pg';
 
 
-async function seedUsers() {
-  await postClient.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-  
-  await postClient.query(`DROP TABLE IF EXISTS users;`)
-  const dd = 
-  await postClient.query(`
+async function seedUsers(client: Client) {
+
+  await client.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+
+  await client.query(`DROP TABLE IF EXISTS users;`)
+  const dd =
+    await client.query(`
     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
@@ -19,23 +21,23 @@ async function seedUsers() {
     );`);
 
 
-   
 
 
-  return  users.map(async (user) => {
+
+  return users.map(async (user) => {
     const hashedPassword = await bcrypt.hash(user.password, 10);
-    const query = `INSERT INTO users (name, email, password) VALUES ($1, $2, $3);`
-    const values = [user.name, user.email, hashedPassword]
-    const sd= await postClient.query(query, values);
+    const query = `INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4);`
+    const values = [user.id, user.name, user.email, hashedPassword]
+    const sd = await client.query(query, values);
     return sd
   });
 }
 
-async function seedInvoices() {
-  await postClient.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+async function seedInvoices(client: Client) {
+  await client.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
 
-  await postClient.query(`DROP TABLE IF EXISTS invoices;`)
-  await postClient.query(`
+  await client.query(`DROP TABLE IF EXISTS invoices;`)
+  await client.query(`
     CREATE TABLE IF NOT EXISTS invoices (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       customer_id UUID NOT NULL,
@@ -47,20 +49,20 @@ async function seedInvoices() {
 
   const insertedInvoices = await Promise.all(
     invoices.map(
-      (invoice) => postClient.query(`
+      (invoice) => client.query(`
         INSERT INTO invoices (customer_id, amount, status, date)
         VALUES ($1, $2, $3, $4);
-      `, [invoice.customer_id,invoice.amount, invoice.status, invoice.date]),
+      `, [ invoice.customer_id, invoice.amount, invoice.status, invoice.date]),
     ),
   );
 
   return insertedInvoices;
 }
 
-async function seedCustomers() {
-  await postClient.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-  await postClient.query(`DROP TABLE IF EXISTS customers;`)
-  await postClient.query(`
+async function seedCustomers(client: Client) {
+  await client.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+  await client.query(`DROP TABLE IF EXISTS customers;`)
+  await client.query(`
     CREATE TABLE IF NOT EXISTS customers (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
@@ -71,19 +73,19 @@ async function seedCustomers() {
 
   const insertedCustomers = await Promise.all(
     customers.map(
-      (customer) =>postClient.query(`
-        INSERT INTO customers (name, email, image_url)
-        VALUES ($1, $2, $3);
-      `, [customer.name,customer.email ,customer.image_url]),
+      (customer) => client.query(`
+        INSERT INTO customers (id, name, email, image_url)
+        VALUES ($1, $2, $3, $4);
+      `, [customer.id, customer.name, customer.email, customer.image_url]),
     ),
   );
 
   return insertedCustomers;
 }
 
-async function seedRevenue() {  
-  await postClient.query(`DROP TABLE IF EXISTS revenue;`)
-  await postClient.query(`
+async function seedRevenue(client: Client) {
+  await client.query(`DROP TABLE IF EXISTS revenue;`)
+  await client.query(`
     CREATE TABLE IF NOT EXISTS revenue (
       month VARCHAR(4) NOT NULL UNIQUE,
       revenue INT NOT NULL
@@ -92,11 +94,11 @@ async function seedRevenue() {
 
   const insertedRevenue = await Promise.all(
     revenue.map(
-      (rev) => postClient.query(`
+      (rev) => client.query(`
         INSERT INTO revenue (month, revenue)
         VALUES ($1, $2)
         ON CONFLICT (month) DO NOTHING;
-      `,  [rev.month, rev.revenue]),
+      `, [rev.month, rev.revenue]),
     ),
   );
 
@@ -108,22 +110,22 @@ export async function GET() {
   //   message:
   //     'Uncomment this file and remove this line. You can delete this file when you are finished.',
   // });
+  const client: Client = await getSQLClient();
+  try {
 
-  try 
-  {
-    await postClient.connect()
+
     console.log("en english")
-    await postClient.query(`BEGIN`);
-    await seedUsers();
-    await seedCustomers();
-    await seedInvoices();
-    await seedRevenue();
-    await postClient.query(`COMMIT`);
+    await client.query(`BEGIN`);
+    await seedUsers(client);
+    await seedCustomers(client);
+    await seedInvoices(client);
+    await seedRevenue(client);
+    await client.query(`COMMIT`);
 
     return Response.json({ message: 'Database seeded successfully' });
   } catch (error) {
     console.log(error)
-    await postClient.query(`ROLLBACK`);
+    await client.query(`ROLLBACK`);
     return Response.json({ error }, { status: 500 });
   }
 }
