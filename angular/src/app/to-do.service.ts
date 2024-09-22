@@ -22,7 +22,7 @@ export class ToDoService {
   }
 
   public delete=(id:string)=>{
-    console.log(id)
+  //  console.log(id)
     const index = this.list.findIndex(d=>d.id === id)
     if(index >= 0){
       this.list.splice(index, 1)

@@ -9,7 +9,7 @@ describe('ToDoFormComponent', () => {
 
   // let serviceSpyAdd = jasmine.createSpyObj('ToDoService', ['addTodo']);
   // serviceSpyAdd.addTodo.and.returnValue();
-  let mockTopToolBarService:any
+  let mockService:any
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ToDoFormComponent],
@@ -19,9 +19,9 @@ describe('ToDoFormComponent', () => {
      }],
     })
     .compileComponents();
-    mockTopToolBarService = TestBed.inject(ToDoService);
+    mockService = TestBed.inject(ToDoService);
 
-    mockTopToolBarService.addTodo.and.returnValue(); // mock output of function
+    mockService.addTodo.and.returnValue(); // mock output of function
 
 
     fixture = TestBed.createComponent(ToDoFormComponent);
@@ -35,7 +35,7 @@ describe('ToDoFormComponent', () => {
   it('should not be valid as default', () => {
     expect(component.toDoForm.valid).toEqual(false);
   });
-  it('should not allow form to be filled in and submitted', () => {
+  it('should not allow form to be filled in and submitted and cleared after', () => {
 
     const formData = {
       "name": "sdasd",
@@ -45,12 +45,16 @@ describe('ToDoFormComponent', () => {
 
 
     fixture.detectChanges();
-  expect(component.toDoForm.valid).toEqual(true);
+    expect(component.toDoForm.valid).toEqual(true);
 
     component.submit();
+    fixture.detectChanges();
+    expect(component.toDoForm.valid).toEqual(false); 
+    expect(component.toDoForm.value.name).toEqual(null)
+    expect(component.toDoForm.value.message).toEqual(null)
+    
 
-  
-    expect(mockTopToolBarService.addTodo).toHaveBeenCalledTimes(1);
+    expect(mockService.addTodo).toHaveBeenCalledTimes(1);
   });
   
 });

@@ -1,21 +1,31 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DetailsFormComponent } from './details-form.component';
 import testHouse from '../../test-stuff/test-location';
+import { HousingService } from '../housing.service';
 
 describe('DetailsFormComponent', () => {
   let component: DetailsFormComponent;
   let fixture: ComponentFixture<DetailsFormComponent>;
 
 
-  let serviceSpy = jasmine.createSpyObj('HousingService', ['submitApplication']);
-  serviceSpy.submitApplication.and.returnValue();
-
+  
+  let mockService:any
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
 
-      imports:[DetailsFormComponent]
+      imports:[DetailsFormComponent],
+
+      providers: [{
+        provide: HousingService,
+        useValue: jasmine.createSpyObj('HousingService', ['submitApplication'])
+     }],
     })
     .compileComponents();
+
+    mockService = TestBed.inject(HousingService);
+
+    mockService.submitApplication.and.returnValue(); // mock output of function
+
   }));
 
 
@@ -41,7 +51,6 @@ describe('DetailsFormComponent', () => {
     component.submitApplication();
 
     expect(component.applyForm.valid).toEqual(true);
-    expect(serviceSpy.submitApplication).toHaveBeenCalledTimes(0);
+    expect(mockService.submitApplication).toHaveBeenCalledTimes(1);
   });
-
 });
