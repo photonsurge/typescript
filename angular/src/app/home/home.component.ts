@@ -1,23 +1,18 @@
-import { Component, inject } from '@angular/core';
-import { HouseingLocationComponent } from '../houseing-location/houseing-location.component';
-import { CommonModule,  } from '@angular/common';
-import { IHouseingLocation } from '../ihouseing-location';
-import { HousingService } from '../housing.service';
-import { RouterLink } from '@angular/router';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, HouseingLocationComponent, RouterLink],
+  imports: [],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
-  public housingLocationList:IHouseingLocation[] = [];
+  // readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
+  // public housingLocationList:IHouseingLocation[] = [];
 
-  housingService: HousingService = inject(HousingService);
-  constructor() {
-    this.housingLocationList = this.housingService.getAllHousingLocations();
-  }
+  // housingService: HousingService = inject(HousingService);
+  // constructor() {
+  //   this.housingLocationList = this.housingService.getAllHousingLocations();
+  // }
 }

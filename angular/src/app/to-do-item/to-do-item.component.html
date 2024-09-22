@@ -1,6 +1,8 @@
 <div>
     <h2 class="">{{toDo.name}}</h2>
-    <div class="todo-started">{{toDo.started}}</div>
+    <div class="todo-started">{{toDo.started | date:'d/M/yy, h:mm a'}}</div>
 
-    <button (click)="delete()">Delete</button>
+    <button class="btn btn-outline-danger" (click)="delete()">Delete</button>
+
+    <div class="message">{{toDo.message}}</div>
 </div>

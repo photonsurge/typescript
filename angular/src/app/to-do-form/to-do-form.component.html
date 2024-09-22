@@ -1,9 +1,20 @@
 <form [formGroup]="toDoForm" (submit)="submit()">
-    <label for="name">Name</label>
-    <input id="name" type="text" class="new-todo-name" formControlName="name" />
-    <label for="message">Details</label>
-    <textarea id="message" class="" type="text" formControlName="message">
+    <h2>Create To do</h2>
+    <div class="mb-2">
+        <label for="name"  class="form-label">Name</label>
+        <input id="name" type="text" class="new-todo-name form-control" formControlName="name" />
+        <div
+        *ngIf="name !== null && name.invalid && (name.dirty || name.touched)"
+        class="alert "
+      >
+            <div *ngIf="name.errors?.['required']">Name is required.</div>
+        </div>
+    </div>
+ 
+    <div class="mb-2">
+        <label for="message">Details</label>
+        <textarea id="message" class="form-control" type="text" formControlName="message"></textarea>
+    </div>
 
-    </textarea>
-    <button type="submit" class="add-todo">Add To Do</button>
+    <button type="submit" class="add-todo btn btn-outline-primary" [disabled]="!toDoForm.valid">Add To Do</button>
 </form>

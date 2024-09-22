@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DetailsFormComponent } from './details-form.component';
-import { of } from 'rxjs';
 import testHouse from '../../test-stuff/test-location';
 
 describe('DetailsFormComponent', () => {
