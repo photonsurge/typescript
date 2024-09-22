@@ -11,8 +11,8 @@
             { title: 'Angular 17 Into Locations', link: '/locations' },
           ]; track item.title) {
             <li class="nav-item">
-                <a [routerLink]="[item.link]">{{item.title}}</a>
-                <a class="nav-link" aria-current="page" [href]="item.link">{{item.title}}</a>
+                <a class="nav-link" aria-current="page" [routerLink]="[item.link]">{{item.title}}</a>
+
             </li>
           }
           
