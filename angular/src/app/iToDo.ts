@@ -1,7 +1,7 @@
 export interface iToDo {
     id:string;
     name:string;
-    // message:string;
-    dateAdded:Date;
+    message?:string;
+    started:Date;
     completedDate?:Date;
 }

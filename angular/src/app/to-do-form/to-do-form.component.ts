@@ -12,19 +12,19 @@ import { ToDoService } from '../to-do.service';
 export class ToDoFormComponent {
   toDoService = inject(ToDoService);
 
-  applyForm = new FormGroup({
+  toDoForm = new FormGroup({
     name: new FormControl('',  [Validators.required]),
-    message: new FormControl('',[Validators.required]),
+    message: new FormControl('',[]),
   });
 
   submit():void {
-    if (this.applyForm.invalid) {
+    if (this.toDoForm.invalid) {
       return;
     }
 
     this.toDoService.addTodo(
-      this.applyForm.value.name ?? '',
-      // this.applyForm.value.message ?? '',
+      this.toDoForm.value.name ?? '',
+      this.toDoForm.value.message?? undefined,
     );
   }
 }

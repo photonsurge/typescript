@@ -1,4 +1,7 @@
 <div>
-    <app-to-do />
+    <app-to-do-item
+    *ngFor="let todo of list"
+    [toDo]="todo"
+    />
 
 </div>

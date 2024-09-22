@@ -5,16 +5,24 @@ import { iToDo } from './iToDo';
   providedIn: 'root'
 })
 export class ToDoService {
-  private todoList:iToDo[] = [];
+  private list:iToDo[] = [];
   constructor() { }
 
-  uniqueId=()=>{
+  private uniqueId=()=>{
     return Math.random().toString(16).slice(2)
   }
-  public addTodo=(name:string)=>{
-    this.todoList.push({id:this.uniqueId(), name:name, dateAdded:new Date()})
+  
+  public addTodo=(name:string, message?:string)=>{
+  //  console.log("addTodo", this.list)
+    this.list.push({id:this.uniqueId(), name:name, started:new Date(), message})
   }
+  
   public getAll=()=>{
-    return this.todoList;
+    return this.list;
+  }
+
+  public delete=(id:string)=>{
+    console.log(id)
+    this.list = this.list.filter(dd=>dd.id!== id);
   }
 }
