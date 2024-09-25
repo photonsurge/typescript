@@ -2,6 +2,12 @@ import { bootstrapApplication, provideProtractorTestingSupport } from '@angular/
 import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
 import routes from './app/app.routes';
+import { provideHttpClient } from '@angular/common/http';
 bootstrapApplication(AppComponent, {
-  providers: [provideProtractorTestingSupport(), provideRouter(routes)],
+  providers: [
+    provideProtractorTestingSupport(), 
+    provideRouter(routes),
+    provideHttpClient(),
+  
+  ],
 }).catch((err) => console.error(err));

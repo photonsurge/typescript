@@ -3,12 +3,18 @@ import { HomeComponent } from './home/home.component';
 import { DetailsComponent } from './details/details.component';
 import { ChecklistComponent } from './checklist/checklist.component';
 import { LocationsComponent } from './locations/locations.component';
+import { PokemonsComponent } from './pokemons/pokemons.component';
+import { PokemonComponent } from './pokemon/pokemon.component';
 
 const routes: Routes = [
     {
         path: '',
         component: HomeComponent,
         title: 'Home page',
+      },    {
+        path: 'checklist',
+        component: ChecklistComponent,
+        title: 'Checklist',
       },
       {
         path: 'locations',
@@ -21,9 +27,14 @@ const routes: Routes = [
         title: 'Home details',
       },
       {
-        path: 'checklist',
-        component: ChecklistComponent,
-        title: 'Check List',
+        path: 'pokemon',
+        component: PokemonsComponent,
+        title: 'Pokemon List',
+      },
+      {
+        path: 'pokemon/:id',
+        component: PokemonComponent,
+        title: 'Pokemon',
       },
 ];
 export default routes;

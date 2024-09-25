@@ -11,6 +11,9 @@ describe('NavigationComponent', () => {
   let fixture: ComponentFixture<NavigationComponent>;
 
   beforeEach(async () => {
+
+
+    
     await TestBed.configureTestingModule({
       providers: [
         provideRouter([
