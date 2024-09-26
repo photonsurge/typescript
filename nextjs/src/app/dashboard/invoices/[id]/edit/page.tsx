@@ -3,7 +3,17 @@ import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchCustomers, fetchInvoiceById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
-export default async function Page({ params }: { params: { id: string } }) {
+type Params = { 
+    params: { id: string } 
+}
+export async function generateMetadata({ params }: Params) {
+    const invoice = await fetchInvoiceById(params.id)
+    if(!invoice){
+        return null;
+    }
+    return { title: `Invoice: #${invoice.id}` };
+  }
+export default async function Page({ params }:Params ) {
     const id = params.id;
     const [invoice, customers] = await Promise.all([
         fetchInvoiceById(id),

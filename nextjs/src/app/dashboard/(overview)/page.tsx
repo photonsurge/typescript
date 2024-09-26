@@ -1,4 +1,4 @@
-
+"use server"
 import { Card } from "@/app/ui/dashboard/cards";
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
 import RevenueChart from "@/app/ui/dashboard/revenue-chart";

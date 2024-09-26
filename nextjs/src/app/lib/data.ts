@@ -1,8 +1,9 @@
 
-import { postPool } from '../db';
+import * as db from '../db';
 import {
   CustomerField,
   CustomersTableType,
+  Invoice,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
@@ -18,7 +19,7 @@ export async function fetchRevenue() {
     console.log('Fetching revenue data...');
   // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const data = await postPool.query<Revenue>(`SELECT * FROM revenue`);
+    const data = await db.poolQuery<Revenue>(`SELECT * FROM revenue`);
 
     // console.log('Data fetch completed after 3 seconds.');
 
@@ -31,7 +32,7 @@ export async function fetchRevenue() {
 
 export async function fetchLatestInvoices() {
   try {
-    const data = await postPool.query<LatestInvoiceRaw>(`SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+    const data = await db.poolQuery<LatestInvoiceRaw>(`SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
       ORDER BY invoices.date DESC
@@ -53,9 +54,12 @@ export async function fetchCardData() {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = postPool.query(`SELECT COUNT(*) FROM invoices`);
-    const customerCountPromise = postPool.query(`SELECT COUNT(*) FROM customers`);
-    const invoiceStatusPromise = postPool.query(`SELECT
+    interface iCount{
+      count:number;
+    }
+    const invoiceCountPromise =  db.poolQuery<iCount>(`SELECT COUNT(*) FROM invoices`);
+    const customerCountPromise = db.poolQuery<iCount>(`SELECT COUNT(*) FROM customers`);
+    const invoiceStatusPromise = db.poolQuery<any>(`SELECT
          SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
          FROM invoices`);
@@ -65,7 +69,7 @@ export async function fetchCardData() {
       customerCountPromise,
       invoiceStatusPromise,
     ]);
-
+  //  console.log(data)
     const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
     const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
     const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
@@ -91,7 +95,7 @@ export async function fetchFilteredInvoices(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const invoices = await postPool.query<InvoicesTable>(`
+    const invoices = await db.poolQuery<InvoicesTable>(`
       SELECT
         invoices.id,
         invoices.amount,
@@ -121,7 +125,7 @@ export async function fetchFilteredInvoices(
 
 export async function fetchInvoicesPages(query: string) {
   try {
-    const count = await postPool.query(`SELECT COUNT(*)
+    const count = await db.poolQuery<any>(`SELECT COUNT(*)
     FROM invoices
     JOIN customers ON invoices.customer_id = customers.id
     WHERE
@@ -140,9 +144,9 @@ export async function fetchInvoicesPages(query: string) {
   }
 }
 
-export async function fetchInvoiceById(id: string) {
+export async function fetchInvoiceById(id: string):Promise<InvoiceForm> {
   try {
-    const data = await postPool.query<InvoiceForm>(`
+    const data = await db.poolQuery<InvoiceForm>(`
       SELECT
         invoices.id,
         invoices.customer_id,
@@ -167,7 +171,7 @@ export async function fetchInvoiceById(id: string) {
 
 export async function fetchCustomers() {
   try {
-    const data = await postPool.query<CustomerField>(`
+    const data = await db.poolQuery<CustomerField>(`
       SELECT
         id,
         name
@@ -185,7 +189,7 @@ export async function fetchCustomers() {
 
 export async function fetchFilteredCustomers(query: string) {
   try {
-    const data = await postPool.query<CustomersTableType>(`
+    const data = await db.poolQuery<CustomersTableType>(`
 		SELECT
 		  customers.id,
 		  customers.name,
