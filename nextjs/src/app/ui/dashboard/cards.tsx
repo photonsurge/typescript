@@ -20,7 +20,6 @@ export default async function CardWrapper() {
 export function Card({
   title,
   value,
-  type,
 }: {
   title: string;
   value: number | string;

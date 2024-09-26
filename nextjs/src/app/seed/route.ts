@@ -11,8 +11,7 @@ async function seedUsers(client: Client) {
   await client.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
 
   await client.query(`DROP TABLE IF EXISTS users;`)
-  const dd =
-    await client.query(`
+  await client.query(`
     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
@@ -52,7 +51,7 @@ async function seedInvoices(client: Client) {
       (invoice) => client.query(`
         INSERT INTO invoices (customer_id, amount, status, date)
         VALUES ($1, $2, $3, $4);
-      `, [ invoice.customer_id, invoice.amount, invoice.status, invoice.date]),
+      `, [invoice.customer_id, invoice.amount, invoice.status, invoice.date]),
     ),
   );
 
