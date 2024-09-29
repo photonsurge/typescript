@@ -2,6 +2,7 @@ export interface IPokemonName{
     name:string;
     url:string;
     id?:string;
+    data?:IPokemon;
 }
 export interface IPokemonListResponse{
     count:number;

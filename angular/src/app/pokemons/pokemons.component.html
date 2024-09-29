@@ -1,6 +1,13 @@
-<div class="row">
-    <app-pokemon-title 
-    *ngFor="let pokemon of list"
-    [pokemon]="pokemon"/>
+<div class="container">
+    <div class="row">
+        <div *ngFor="let pokemon of list" class="col-sm-4">
+            <div class="square">
+                <app-pokemon-title  [pokemon]="pokemon"/>
+            </div>
+            
+        </div>
+        
+        <div class="col-sm-12" *ngIf="list.length === 0">Loading. </div>
+    </div>
 
 </div>

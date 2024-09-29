@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { PokemonService } from '../pokemon.service';
 import { IPokemonName } from '../i-pokemon';
 import { PokemonTitleComponent } from '../pokemon-title/pokemon-title.component';
@@ -11,10 +11,10 @@ import { PokemonTitleComponent } from '../pokemon-title/pokemon-title.component'
   templateUrl: './pokemons.component.html',
   styleUrl: './pokemons.component.css'
 })
-export class PokemonsComponent {
+export class PokemonsComponent implements OnInit {
   service:PokemonService = inject(PokemonService)
   list:IPokemonName[] = []
-  constructor(){
+  ngOnInit(): void {
     this.get()
   }
   async get(){

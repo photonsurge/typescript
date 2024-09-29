@@ -1,3 +1,13 @@
-
+@if (pokemon.id){
     <h2>#{{pokemon.id}} {{pokemon.name}}</h2>
     <a class="btn btn-primary p-1 pokemon-link" [routerLink]="['/pokemon', pokemon.id]">Pokemon Details</a>
+    <div *ngIf="createComponent | async" class="testDisp"></div>
+    <app-pokemon-title-details  *ngIf="createComponent | async"  [id]="pokemon.id"></app-pokemon-title-details>
+    
+} 
+
+@if (!pokemon.id){
+    <div>
+        Loading
+    </div>
+}

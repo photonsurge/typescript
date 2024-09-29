@@ -1,6 +1,15 @@
 @if (pokemon){
-    <h2>{{pokemon.name}}</h2>
+    <h2>#{{pokemon.id}} {{pokemon.name}}</h2>
+
+    <div class="pokemonHeight">Height : {{pokemon.height}}</div>
 
 
+    <div class="pokemonWeight">Weight : {{pokemon.weight}}</div>
 
+} 
+
+@if (!pokemon){
+    <div>
+        Loading
+    </div>
 }

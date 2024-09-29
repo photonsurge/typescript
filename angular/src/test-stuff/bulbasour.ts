@@ -1,5 +1,10 @@
-import { IPokemon } from "../app/i-pokemon";
-
+import { IPokemon, IPokemonListResponse } from "../app/i-pokemon";
+export const pokemonListResult: IPokemonListResponse = {
+  count: 1,
+  next: null,
+  previous: null,
+  results: [{ name: 'test', url: "https://pokeapi.co/api/v2/pokemon/1/" }]
+}
 export const bulbasor:IPokemon={
     "abilities": [
       {
